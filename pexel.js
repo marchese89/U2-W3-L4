@@ -125,3 +125,8 @@ function updatePhoto(photo) {
   imgModal.innerHTML = `<img src="${photo.src.tiny}" class="w-100"/>`;
   document.getElementById("exampleModalLabel").innerText = photo.alt;
 }
+function emptyModal() {
+  const imgModal = document.getElementById("img-modal");
+  imgModal.innerHTML = "";
+  document.getElementById("exampleModalLabel").innerText = "";
+}
