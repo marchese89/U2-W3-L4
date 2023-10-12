@@ -52,7 +52,12 @@ function createCards(photos) {
                 <button
                   type="button"
                   class="btn btn-sm btn-outline-secondary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  onclick="updateModal(${photo.id})" 
                 >
+
+
                   View
                 </button>
                 <button
@@ -70,16 +75,6 @@ function createCards(photos) {
     row.appendChild(col);
   });
 }
-
-// const loadImg = document.getElementById("load-img");
-// loadImg.addEventListener("click", () => {
-//   loadImages("kittens");
-// });
-
-// const loadImg2 = document.getElementById("load-img2");
-// loadImg2.addEventListener("click", () => {
-//   loadImages("dogs");
-// });
 
 const addressBarContent = new URLSearchParams(location.search);
 
@@ -99,5 +94,34 @@ const searchForm = document.getElementById("search-form");
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const query = document.getElementById("search-query");
+  localStorage.setItem("query", query.value);
   loadImages(query.value);
 });
+
+function updateModal(id) {
+  fetch("https://api.pexels.com/v1/photos/" + id, {
+    headers: {
+      Authorization: "DVC1e1mowerNoffroUC10X14SazMZpC9q5VyUb7teJfcWeXchaqOE7dW",
+    },
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw new Error("Errore nella richiesta");
+      }
+    })
+    .then((data) => {
+      updatePhoto(data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+function updatePhoto(photo) {
+  const imgModal = document.getElementById("img-modal");
+  imgModal.innerHTML = "";
+  imgModal.innerHTML = `<img src="${photo.src.tiny}" class="w-100"/>`;
+  document.getElementById("exampleModalLabel").innerText = photo.alt;
+}
